@@ -15,7 +15,7 @@
     </div>
     <div class="md-bg" v-if='isShowCdList'>
       <div class="cdlist-warp">
-        <div @click="isShowCdList=!isShowCdList" class="goback">返回</div>
+        <div @click="isShowCdList=!isShowCdList" class="goback"></div>
         <div class="des-warp clearfix">
           <img v-bind:src="cdList.coverImgUrl" alt="" class="topimg">
           <div class="des-right">
@@ -137,14 +137,15 @@ export default {
 }
 .goback{
   position: fixed;
-  top:20px;
-  left:20px;
-  background: #fff;
-  opacity:0.3;
-  padding: 6px;
-  border-radius: 4px;
-  line-height: 16px;
-  font-size: 1.4em;
+  width: 36px;
+  height: 36px;
+  top:16px;
+  left:16px;
+  background: url('../../assets/goback.png') center center no-repeat;
+  -webkit-background-size: 50%;
+  background-size: 75%;
+  border-radius: 75%;
+  border: 1px solid #fff;
 }
 .cdlist-warp {
   padding: 10px 10px 0px;
@@ -159,6 +160,11 @@ export default {
 }
 .des-right{
   overflow: hidden;
+  padding-top: 10px;
+}
+.des-right p{
+  line-height: 20px;
+  font-size: 1.4em;
 }
 .tracks{
   width: 100%;
@@ -169,5 +175,8 @@ export default {
 }
 .artists{
   text-align: center;
+}
+.des-warp{
+  
 }
 </style>

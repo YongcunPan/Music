@@ -2,7 +2,7 @@
   <div id="itcomponent" class="fixed-bottom">
     <div class="container">
       <p>宝剑锋从磨砺出，梅花香自苦寒来。</p>
-      <p> written by {{ author }} </p>
+      <p> Production by {{ author }} </p>
     </div>
   </div>
 </template>
