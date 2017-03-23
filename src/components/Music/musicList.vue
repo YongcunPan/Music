@@ -1,19 +1,19 @@
 <template>
-  <div class="md-bg" v-if='isShow'>
-    <div class="musiclist-warp" v-if='musiclist'>
+  <div class="md-bg">
+    <div class="musiclist-warp" v-if='datas'>
       <div @click="goback()" class="goback"></div>
       <div class="des-warp clearfix">
-        <img v-bind:src="musiclist.coverImgUrl" alt="" class="topimg" width="150">
+        <img v-bind:src="datas.coverImgUrl" alt="" class="topimg" width="150">
         <div class="des-right">
-          <h1>{{ musiclist.name }}</h1>
-          <p>标签：<span v-for="tag in musiclist.tags">{{tag}}</span></p>
-          <p class="desc">介绍：{{musiclist.description}}</p>
+          <h1>{{ datas.name }}</h1>
+          <p>标签：<span v-for="tag in datas.tags">{{tag}}</span></p>
+          <p class="desc">介绍：{{datas.description}}</p>
         </div>
       </div>
       <h2 class="">歌曲列表</h2>
       <table class="tracks">
-          <tr v-for="(item,index) in musiclist.tracks">
-              <td class="music-name" @click='playMusic(musiclist.tracks,index)'>
+          <tr v-for="(item,index) in datas.tracks">
+              <td class="music-name" @click='playMusic(datas.tracks,index)'>
                 {{index+1}}.{{item.name}}
               </td>
               <td class="artists"><span v-for="artist in item.artists">{{artist.name}}</span></td>
@@ -25,21 +25,22 @@
 
 <script>
   export default {
-    props: ['musiclist'],
+    props: ['datas'],
     name: 'musicList',
     data () {
       return {
-        isShow:true
       }
     },
-    created() {
-      // console.log(1)
+    mounted() {
     },
     methods: {
       goback () {
-        this.isShow=false
-        this.$emit('isShowList',false)
-      }
+        this.$router.go(-1)
+      },
+    playMusic (item,index) {
+      this.$store.commit('setSongList', item)
+      this.$store.commit('setcurrentIndex', index)
+    }
     }
   }
 </script>

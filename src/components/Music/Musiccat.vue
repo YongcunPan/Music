@@ -39,6 +39,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'cateListBox',
     data () {
@@ -54,7 +55,6 @@ export default {
     },
     created() {
       this.getData2()
-      // this.getData()
     },
     methods: {
       getData: function () {
@@ -69,7 +69,6 @@ export default {
         return id
       },
       getData2:function (){
-        // console.log(this.topList.length)
         for (let i = 0; i < this.topList.length; i++) {
           let id = this.topList[i]
           this.iAjax(id)
@@ -81,21 +80,17 @@ export default {
           response = response.body
           if(response.code==200 && response.result.playCount> 100){
             _this.catlist.push(response.result)
-            // console.log(response.result)
           }
         })
       },
       showCdList: function(index) {
         this.isShowCdList=true
         this.cdList=this.catlist[index]
-        // console.log(this.catlist[index])
-        // this.$router.push({path: '/music?id='+id})
       },
       playMusic: function(item,index) {
-        this.currentPlaying=index
-        this.$emit('playingList',item)
-        this.$emit('currentPlaying',index)
-        // console.log(item[index])
+        this.$store.commit('setSongList', item)
+        this.$store.commit('setcurrentIndex', index)
+
       }
     }
   }

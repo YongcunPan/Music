@@ -1,6 +1,7 @@
 <template>
   <div class="imain clearfix" v-if='musiclist'>
-    <musiclist :musiclist='musiclist' v-on:isShowList='listenIsShowList'></musiclist>
+    <musiclist 
+      v-bind:datas='musiclist' ></musiclist>
   </div>
 </template>
 
@@ -12,7 +13,6 @@ export default {
     return {
       musiclist:[],
       id:'629404383',
-      isShowiMusic:true
     }
   },
   components:{
@@ -28,17 +28,7 @@ export default {
       this.$http.get('/api/playlist/detail?id='+id).then((response) => {
         response = response.body
         _this.musiclist=response.result
-        _this.msg=response.result.name
-        // console.log(response)
       })
-    },
-    listenIsShowList: function (res) {
-      this.isShowiMusic=res
-    }
-  },
-  watch: {
-    isShowiMusic: function (val) {
-      this.$emit('isShowList',false)
     }
   }
 }
