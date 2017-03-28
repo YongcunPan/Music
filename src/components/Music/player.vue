@@ -13,7 +13,7 @@
     </div>
     <div class="paly-bar-right">
       <p class="play-bar-text" >{{playingList[currentPlaying].name}}</p>
-      <p><span v-for="artist in playingList[currentPlaying].artists">{{artist.name}}</span></p>
+      <p id="lyric"><span v-for="artist in playingList[currentPlaying].artists">{{artist.name}}</span></p>
       <img class="paly-bar-next" 
         src="../../assets/next.png" 
         alt="" 
@@ -38,12 +38,15 @@ export default {
       iconPause: require('../../assets/icon-pause.png'),
       playingList: '',
       currentPlaying: '',
-      currentTime:0,
       playing:'',
-      isShowiMusic:false
+      isShowiMusic:false,
+      lyric: ''
     }
   },
   computed:mapGetters(['songList','currentIndex']),
+  mounted: function () {
+    
+  },
   methods: {
     toPlay: function (){
       document.getElementById('music').play()
@@ -73,15 +76,30 @@ export default {
       }
     },
     updateTime: function () {
-      this.currentTime=parseInt(document.getElementById('music').currentTime)
+      let currenttime=parseInt(document.getElementById('music').currentTime)
+      if(this.lyric[currenttime]){
+        // console.log(this.lyric[currenttime])
+        document.getElementById('lyric').innerHTML = this.lyric[currenttime]
+      }
+    },
+    getLrc: function () {
+      let id=this.playingList[this.currentPlaying].id
+      this.$http.get('/api/song/lyric?os=pc&lv=-1&tv=-1&id='+id).then((response) => {
+        if(response.data.lrc){
+          // console.log(response.data.lrc.lyric)
+          this.lyric= parseLyric(response.data.lrc.lyric)
+          // console.log(this.lyric)
+        }
+      })
     }
   },
   watch: {
-    currentIndex: function (val) {
-      this.currentPlaying=val
-    },
     songList: function (val) {
       this.playingList=val
+    },
+    currentIndex: function (val) {
+      this.currentPlaying=val
+      this.getLrc()
     }
   }
 }
@@ -106,6 +124,27 @@ function isPc() {
   } else { 
     return false;
   }
+}
+
+function parseLyric(lrc) {
+  var lyrics = lrc.split("\n");
+  var lrcObj = {};
+  for(var i=0;i<lyrics.length;i++){
+    var lyric = decodeURIComponent(lyrics[i]);
+    var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+    var timeRegExpArr = lyric.match(timeReg);
+    if(!timeRegExpArr)continue;
+    var clause = lyric.replace(timeReg,'');
+
+    for(var k = 0,h = timeRegExpArr.length;k < h;k++) {
+      var t = timeRegExpArr[k];
+      var min = Number(String(t.match(/\[\d*/i)).slice(1)),
+          sec = Number(String(t.match(/\:\d*/i)).slice(1));
+      var time = min * 60 + sec;
+      lrcObj[time] = clause;
+    }
+  }
+  return lrcObj;
 }
 </script>
 
